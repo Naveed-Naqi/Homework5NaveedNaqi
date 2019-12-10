@@ -11,6 +11,7 @@
 #include <list>
 #include <vector>
 #include <unordered_map>
+#include <climits>
 
 template <typename Object>
 struct Vertex;
@@ -21,7 +22,7 @@ struct Edge;
 template <typename Object>
 struct Edge {
 
-    Edge( Vertex<Object>* dest, float weight) : dest_(dest), weight_(weight) {}
+    Edge(Vertex<Object>* dest, float weight) : dest_(dest), weight_(weight) {}
     Vertex<Object>* dest_;
     float weight_;
 
@@ -45,6 +46,17 @@ struct Vertex {
         }
 
         std::cout << "\n";
+    }
+
+    int FindIndexOfEdge(const Object& val_to_search_for) {
+
+        for(int i = 0; i < edges_.size(); ++i) {
+            if(edges_[i].dest_->val_ == val_to_search_for) {
+                return i;
+            }
+        }
+
+        return INT_MIN;
     }
 };
 
@@ -81,6 +93,8 @@ public:
     */
     Vertex<Object>* FindVertex(const Object& val_to_search_for);
 
+    float FindWeightOfEdge(const Object& source, const Object& destination);
+
     void PrintAdjList() const;
 
 private:
@@ -110,6 +124,20 @@ template <typename Object>
 Vertex<Object>* Graph<Object>::FindVertex(const Object& val_to_search_for) {
 
     return adj_list_.find(val_to_search_for) == adj_list_.end() ? nullptr : adj_list_[val_to_search_for];
+}
+
+template <typename Object>
+float Graph<Object>::FindWeightOfEdge(const Object& source, const Object& destination) {
+
+    Vertex<Object>* new_vertex = adj_list_[source];
+    int index_of_edge = new_vertex->FindIndexOfEdge(destination);
+    float weight = INT_MIN;
+
+    if(index_of_edge != INT_MIN) {
+        weight = new_vertex->edges_[index_of_edge].weight_;
+    }
+    
+    return weight;
 }
 
 template<typename Object>

@@ -1,6 +1,20 @@
+/*
+** Author: Naveed Naqi
+** Date: 12/10/2019
+** Description: This file creates and tests the Graph implementation outlined in the Graph.hpp file.
+
+** When running this file you must supply two text files, both contained in a folder called InputFiles.
+
+** The first file must be describing a graph with the first line being the number of verticies, 
+** and the rest of the file being an adjacency list representation.
+
+** The second file must contain a list of vertex pairs that are contained within the graph.
+*/
+
 #include "Graph.hpp"
 #include <fstream>
 #include <sstream>
+#include <climits>
 
 int StringToInt(std::string some_string) {
     std::stringstream conversion(some_string);
@@ -20,18 +34,31 @@ float StringToFloat(std::string some_string) {
 
 /*
 ** Assumes that the first line of the text file being read is the size of the input graph.
-** @param: input_graph is a text file that contains an adjacencny list representation of a graph.
+** @param: input_graph is a text file that contains an adjacency list representation of a graph.
+** return: returns the size of the graph.
 */
-std::size_t GetSize(std::string input_graph) {
+std::size_t GetSizeFromFile(std::string input_graph) {
     std::ifstream input_file;
     input_file.open("InputFiles/"+input_graph);
 
+    if(!input_file) {
+        std::cerr << "Unable to open " + input_graph;
+        exit(1);
+    }
+
     std::string curr_line = "";
     std::getline(input_file, curr_line);
+    input_file.close();
 
     return StringToInt(curr_line);
 }
 
+/*
+** Adds the corresponding edges to a graph.
+** Assumes that the curr_line is formated like an adjacency list, with the source vertex at the beginning of the string
+** and all destination verticies and their weights following that.
+** @param: input_graph is a text file that contains an adjacency list representation of a graph.
+*/
 void CreateEdges(Graph<int>& new_graph, std::string curr_line) {
 
     int source_val = StringToInt(curr_line.substr(0,1));
@@ -49,7 +76,7 @@ void CreateEdges(Graph<int>& new_graph, std::string curr_line) {
     int vertex_val = 0;
     float weight = 0;
 
-    for(int i = start_pos; i < size; i++) {
+    for(int i = start_pos; i < size; ++i) {
         
         if(curr_line[i] == ' ') {
             num_spaces++;
@@ -80,12 +107,15 @@ void CreateEdges(Graph<int>& new_graph, std::string curr_line) {
 }
 
 /*
+** Creates a graph that matches the given input_graph.
+** Assumes there is a text file in a folder called InputFiles that has the same name as the input string input_graph.
 ** @param: input_graph is a text file that contains an adjacencny list representation of a graph.
+** @return: returns the completed graph.
 */
 Graph<int> CreateGraph(std::string input_graph) {
 
     std::ifstream input_file;
-    std::size_t graph_size = GetSize(input_graph);
+    std::size_t graph_size = GetSizeFromFile(input_graph);
     Graph<int> new_graph(graph_size);
 
     input_file.open("InputFiles/"+input_graph);
@@ -99,10 +129,9 @@ Graph<int> CreateGraph(std::string input_graph) {
     std::size_t  line_num = 1;
 
     while(std::getline(input_file, curr_line)) {
-
+        
+        //Skip the first line because it contains the size of the graph and we already have that.
         if(line_num != 1) {
-
-            //std::cout << curr_line[0] << "\n";
             CreateEdges(new_graph, curr_line);
         }
 
@@ -112,6 +141,42 @@ Graph<int> CreateGraph(std::string input_graph) {
     input_file.close();
 
     return new_graph;
+}
+
+void TestGraph(Graph<int>& new_graph, std::string input_query) {
+
+    std::ifstream input_file;
+    input_file.open("InputFiles/"+input_query);
+
+    if(!input_file) {
+        std::cerr << "Unable to open " + input_query;
+        exit(1);
+    }
+
+    std::string curr_line = "";
+
+    while(std::getline(input_file, curr_line)) {
+
+        std::size_t size = curr_line.size();
+        float weight_to_search_for = 0;
+        int source = 0;
+        int dest = 0;
+                
+        for(int i = 0; i < size; ++i) {
+            if(curr_line[i] == ' ') {
+                source = StringToInt(curr_line.substr(0, i+1));
+                dest = StringToInt(curr_line.substr(i+1, size-i+2));
+
+                weight_to_search_for = new_graph.FindWeightOfEdge(source, dest);
+
+                if(weight_to_search_for != INT_MIN) {
+                    std::cout <<  curr_line << ": Connected, weight of edge is " << weight_to_search_for << "\n";
+                } else {
+                    std::cout <<  curr_line << ": Not connected \n";
+                }
+            }
+        }
+    }
 }
 
 int main(int argc, char **argv) {
@@ -126,6 +191,6 @@ int main(int argc, char **argv) {
 
     Graph<int> new_graph = CreateGraph(input_graph);
     new_graph.PrintAdjList();
-
+    TestGraph(new_graph, input_query);
     return 0;
 }
