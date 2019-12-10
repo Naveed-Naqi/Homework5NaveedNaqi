@@ -93,6 +93,12 @@ public:
     */
     Vertex<Object>* FindVertex(const Object& val_to_search_for);
 
+    /*
+    ** Finds weight of some directed edge between a source and destination value.
+    ** @param: source is some vertex that is in the graph.
+    ** @param: destination is some other vertex that is in the graph.
+    ** @return: the weight of the directed edge between source and destination. Returns INT_MIN if no edge is found.
+    */
     float FindWeightOfEdge(const Object& source, const Object& destination);
 
     void PrintAdjList() const;
