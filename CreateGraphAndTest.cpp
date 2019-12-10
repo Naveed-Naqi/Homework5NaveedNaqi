@@ -2,12 +2,9 @@
 ** Author: Naveed Naqi
 ** Date: 12/10/2019
 ** Description: This file creates and tests the Graph implementation outlined in the Graph.hpp file.
-
 ** When running this file you must supply two text files, both contained in a folder called InputFiles.
-
 ** The first file must be describing a graph with the first line being the number of verticies, 
 ** and the rest of the file being an adjacency list representation.
-
 ** The second file must contain a list of vertex pairs that are contained within the graph.
 */
 
@@ -29,8 +26,6 @@ float StringToFloat(std::string some_string) {
     conversion >> val;
     return val;
 }
-
-
 
 /*
 ** Assumes that the first line of the text file being read is the size of the input graph.
@@ -103,7 +98,6 @@ void CreateEdges(Graph<int>& new_graph, std::string curr_line) {
 
     weight = StringToFloat(curr_line.substr(start_pos, size-start_pos+1));
     new_graph.AddEdge(source_val, vertex_val, weight);
-
 }
 
 /*
@@ -143,6 +137,12 @@ Graph<int> CreateGraph(std::string input_graph) {
     return new_graph;
 }
 
+/*
+** Tests a graph implementation in Graph.hpp by checking the edges between the vertex pairs that were specified in an input_query
+** Assumes there is a text file in a folder called InputFiles that has the same name as the input string input_query.
+** @param: input_query is a text file that contains a list of vertex pairs.
+** @param: new_graph is a non-empty graph that has been created with the implementation specified in Graph.hpp
+*/
 void TestGraph(Graph<int>& new_graph, std::string input_query) {
 
     std::ifstream input_file;
@@ -190,7 +190,6 @@ int main(int argc, char **argv) {
     const std::string input_query = std::string(argv[2]);
 
     Graph<int> new_graph = CreateGraph(input_graph);
-    new_graph.PrintAdjList();
     TestGraph(new_graph, input_query);
     return 0;
 }
