@@ -2,6 +2,9 @@
 ** Author: Naveed Naqi
 ** Date: 12/10/2019
 ** Description: This file is the implementation of a graph. The graph is represented as an adjancey list.
+** All values are in the graph are unique nodes.
+** We are using internal structs Vertex and Edge to aid in the internal implementation.
+** The adjacency list is being implemented with a hashtable that matches Objects to Verticies. Each Vertex has a vector of Edges.
 */
 
 #include <iostream>
@@ -29,8 +32,8 @@ struct Edge {
 
 template <typename Object> 
 struct Vertex {
-
     Vertex(const Object& val) : val_(val), indegree_(0) {}
+
     Object val_;
     std::size_t indegree_;
     std::vector<Edge<Object>> edges_;
@@ -49,6 +52,8 @@ template <typename Object>
 class Graph {
 
 public: 
+
+    //Constructor for the Graph, that reserves a size for the adjacency list from the specified size.
     Graph(std::size_t size) {
         adj_list_.reserve(size);
     }
@@ -61,8 +66,19 @@ public:
     ** @param: weight is is some float that is the weight between the two verticies.
     */
     void AddEdge(const Object& source, const Object& destination, float weight);
+
+    /*
+    ** Adds a Vertex to the graph.
+    ** Assumes the vertex is not already in the graph, otherwise it will overwrite the adjacency list.
+    ** @param: new_elem is some Object that needs to be mapped into the adjacency list.
+    */
     void AddVertex(const Object& new_elem);
     
+    /*
+    ** Adds a Vertex to the graph.
+    ** @param: val_to_search_for is some Object that may or may not be in the adjacency list.
+    ** @return: The pointer to the Vertex that is being searched for.
+    */
     Vertex<Object>* FindVertex(const Object& val_to_search_for);
 
     void PrintAdjList() const;
