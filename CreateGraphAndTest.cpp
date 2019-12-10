@@ -182,7 +182,7 @@ void TestGraph(Graph<int>& new_graph, std::string input_query) {
 int main(int argc, char **argv) {
 
     if (argc != 3) {
-        std::cout << "Usage: " << argv[0] << "<input_graph> <input_query>" << std::endl;
+        std::cout << "Usage: " << argv[0] << "<GRAPH_FILE> <GRAPH_QUERY>" << std::endl;
         return 0;
     }
 

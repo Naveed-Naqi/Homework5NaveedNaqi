@@ -8,7 +8,6 @@
 */
 
 #include <iostream>
-#include <list>
 #include <vector>
 #include <unordered_map>
 #include <climits>
@@ -69,6 +68,8 @@ public:
     Graph(std::size_t size) {
         adj_list_.reserve(size);
     }
+
+    std::size_t GetSize() const { return adj_list_.size(); }
 
     /*
     ** Adds an edge between two verticies, with the assigned weight. The edge is directed from the source to the destination. 
