@@ -34,13 +34,19 @@ template <typename Object>
 struct Vertex {
     Vertex(const Object& val) : val_(val), indegree_(0), distance(INT_MAX) {}
 
+    Vertex() : indegree_(0), distance(INT_MAX) {}
+
     Object val_;
     std::size_t indegree_;
     int distance;
     std::vector<Edge<Object>> edges_;
 
     bool operator <(const Vertex<Object>& rhs) {
-        return val_ < rhs.val_;
+        return this->val_ < rhs.val_;
+    }
+
+    bool friend CompareLessThan(Vertex<Object>* lhs, Vertex<Object>* rhs) {
+        return lhs->val_ < rhs->val_;
     }
 
     void PrintEdges() const {

@@ -62,7 +62,7 @@ class BinaryHeap
         Comparable copy = x;
         
         array[ 0 ] = std::move( copy );
-        for( ; x < array[ hole / 2 ]; hole /= 2 )
+        for( ; CompareLessThan(x, array[ hole / 2 ]); hole /= 2 )
             array[ hole ] = std::move( array[ hole / 2 ] );
         array[ hole ] = std::move( array[ 0 ] );
     }
@@ -78,7 +78,7 @@ class BinaryHeap
 
             // Percolate up
         int hole = ++currentSize;
-        for( ; hole > 1 && x < array[ hole / 2 ]; hole /= 2 )
+        for( ; hole > 1 && CompareLessThan(x, array[ hole / 2 ]); hole /= 2 )
             array[ hole ] = std::move( array[ hole / 2 ] );
         array[ hole ] = std::move( x );
     }
@@ -139,7 +139,7 @@ class BinaryHeap
         for( ; hole * 2 <= currentSize; hole = child )
         {
             child = hole * 2;
-            if( child != currentSize && array[ child + 1 ] < array[ child ] )
+            if( child != currentSize && CompareLessThan(array[ child + 1 ], array[ child ]) )
                 ++child;
             if( array[ child ] < tmp )
                 array[ hole ] = std::move( array[ child ] );
