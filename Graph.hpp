@@ -32,11 +32,16 @@ struct Edge {
 
 template <typename Object> 
 struct Vertex {
-    Vertex(const Object& val) : val_(val), indegree_(0) {}
+    Vertex(const Object& val) : val_(val), indegree_(0), distance(INT_MAX) {}
 
     Object val_;
     std::size_t indegree_;
+    int distance;
     std::vector<Edge<Object>> edges_;
+
+    bool operator <(const Vertex<Object>& rhs) {
+        return val_ < rhs.val_;
+    }
 
     void PrintEdges() const {
 
