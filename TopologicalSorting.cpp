@@ -1,5 +1,9 @@
 #include "Utils.hpp"
 
+void TopologicalSorting(Graph<int>& new_graph) {
+
+}
+
 int main(int argc, char **argv) {
 
     if (argc != 2) {
@@ -10,6 +14,7 @@ int main(int argc, char **argv) {
     const std::string input_graph = std::string(argv[1]);
 
     Graph<int> new_graph = CreateGraph(input_graph);
+    TopologicalSorting(new_graph);
 
     return 0;
 }

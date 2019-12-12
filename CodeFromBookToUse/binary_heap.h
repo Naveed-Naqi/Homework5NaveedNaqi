@@ -18,6 +18,15 @@ using namespace std;
 // ******************ERRORS********************************
 // Throws UnderflowException as warranted
 
+/*
+** FILE MODIFIED: [12/11/2019]
+** The "<" operator has been changed to take in a function called CompareLessThanDistance.
+** This function compares two Vertex pointers based on their distance. We need this modification to make Dijstra's algorithm work,
+** because otherwise the Min Heap would not actually hold the minimum distance.
+
+** POTENTIAL FUTURE IMPROVMENT: Change the binary_heap implementation to also take in a templated Comparator.
+** In it's current state it will only work with Vertex pointers and only compare them by distance, but changing it to be templated will make it more general.
+*/
 template <typename Comparable>
 class BinaryHeap
 {

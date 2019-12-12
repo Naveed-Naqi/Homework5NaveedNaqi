@@ -1,7 +1,41 @@
+/*
+** Author: Naveed Naqi
+** Date: 12/10/2019
+** Description: This file contains some utility functions that will be needed across all other files in the project.
+** The primary goal of this utils file is to provide a set of functions to create a graph from the given text file.
+*/
+
 #include "Graph.hpp"
 #include <fstream>
 #include <sstream>
 #include <climits>
+
+int StringToInt(std::string some_string);
+float StringToFloat(std::string some_string);
+
+/*
+** Assumes that the first line of the text file being read is the size of the input graph.
+** @param: input_graph is a text file that contains an adjacency list representation of a graph.
+** return: returns the size of the graph.
+*/
+std::size_t GetSizeFromFile(std::string input_graph);
+
+/*
+** Adds the corresponding edges to a graph.
+** Assumes that the curr_line is formated like an adjacency list, with the source vertex at the beginning of the string
+** and all destination verticies and their weights following that.
+** @param: input_graph is a text file that contains an adjacency list representation of a graph.
+*/
+void CreateEdges(Graph<int>& new_graph, std::string curr_line);
+
+/*
+** Creates a graph that matches the given input_graph.
+** Assumes there is a text file in a folder called InputFiles that has the same name as the input string input_graph.
+** @param: input_graph is a text file that contains an adjacencny list representation of a graph.
+** @return: returns the completed graph.
+*/
+Graph<int> CreateGraph(std::string input_graph);
+
 
 int StringToInt(std::string some_string) {
     std::stringstream conversion(some_string);
@@ -17,11 +51,6 @@ float StringToFloat(std::string some_string) {
     return val;
 }
 
-/*
-** Assumes that the first line of the text file being read is the size of the input graph.
-** @param: input_graph is a text file that contains an adjacency list representation of a graph.
-** return: returns the size of the graph.
-*/
 std::size_t GetSizeFromFile(std::string input_graph) {
     std::ifstream input_file;
     input_file.open("InputFiles/"+input_graph);
@@ -38,12 +67,6 @@ std::size_t GetSizeFromFile(std::string input_graph) {
     return StringToInt(curr_line);
 }
 
-/*
-** Adds the corresponding edges to a graph.
-** Assumes that the curr_line is formated like an adjacency list, with the source vertex at the beginning of the string
-** and all destination verticies and their weights following that.
-** @param: input_graph is a text file that contains an adjacency list representation of a graph.
-*/
 void CreateEdges(Graph<int>& new_graph, std::string curr_line) {
 
     int source_val = StringToInt(curr_line.substr(0,1));
@@ -90,12 +113,6 @@ void CreateEdges(Graph<int>& new_graph, std::string curr_line) {
     new_graph.AddEdge(source_val, vertex_val, weight);
 }
 
-/*
-** Creates a graph that matches the given input_graph.
-** Assumes there is a text file in a folder called InputFiles that has the same name as the input string input_graph.
-** @param: input_graph is a text file that contains an adjacencny list representation of a graph.
-** @return: returns the completed graph.
-*/
 Graph<int> CreateGraph(std::string input_graph) {
 
     std::ifstream input_file;

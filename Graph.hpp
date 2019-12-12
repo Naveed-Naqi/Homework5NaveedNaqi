@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <climits>
 #include <stack>
+#include <float.h>
 
 template <typename Object>
 struct Vertex;
@@ -33,13 +34,13 @@ struct Edge {
 
 template <typename Object> 
 struct Vertex {
-    Vertex(const Object& val) : val_(val), indegree_(0), distance_(INT_MAX), known_(false), prev_(nullptr) {}
+    Vertex(const Object& val) : val_(val), indegree_(0), distance_(FLT_MAX), known_(false), prev_(nullptr) {}
 
-    Vertex() : indegree_(0), distance_(INT_MAX), known_(false), prev_(nullptr) {}
+    Vertex() : indegree_(0), distance_(FLT_MAX), known_(false), prev_(nullptr) {}
 
     Object val_;
     std::size_t indegree_;
-    int distance_;
+    float distance_;
     Vertex<Object>* prev_;
     bool known_;
     std::vector<Edge<Object>> edges_;
@@ -114,8 +115,12 @@ public:
 
     void PrintAdjList() const;
 
+    //Resets all distances for each vertex to FLT_MAX and all known_ variables to false.
     void ResetDistanceAndKnownStatus();
 
+    // Prints all shortest paths, ASSUMING that some single source pathfinding algorithm has been run on the graph before calling this function.
+    // Also assumes that the prev_ member variable has been updated with whatever pathfinding algorithm is being called.
+    // In this project we use Dijkstras.
     void PrintShortestPaths(Vertex<Object>* starting_vertex) const;
 
 private:
@@ -174,7 +179,7 @@ template<typename Object>
 void Graph<Object>::ResetDistanceAndKnownStatus() {
 
     for(auto itr = adj_list_.begin(); itr != adj_list_.end(); ++itr) {
-        itr->second->distance_ = INT_MAX;
+        itr->second->distance_ = FLT_MAX;
         itr->second->known_ = false;
     }
 }
@@ -182,16 +187,14 @@ void Graph<Object>::ResetDistanceAndKnownStatus() {
 template<typename Object>
 void Graph<Object>::PrintShortestPaths(Vertex<Object>* starting_vertex) const {
 
-    
-
     for(auto itr = adj_list_.begin(); itr != adj_list_.end(); ++itr) {
 
         std::stack<Vertex<int>*>  temp_stack;
         Vertex<Object>* curr_vertex = itr->second;
-        int total_cost = curr_vertex->distance_;
+        float total_cost = curr_vertex->distance_;
         std::cout << curr_vertex->val_ << " : " << starting_vertex->val_;
         
-        while(curr_vertex != starting_vertex) {
+        while(curr_vertex->val_ != starting_vertex->val_) {
             temp_stack.push(curr_vertex);
             curr_vertex = curr_vertex->prev_;
         }

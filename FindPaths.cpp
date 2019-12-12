@@ -1,3 +1,10 @@
+/*
+** Author: Naveed Naqi
+** Date: 12/10/2019
+** Description: This file is the implementation of Dijstra's algorithm on the graph implementation defined in "Graph.hpp".
+** We are using the binary heap implementation that has been slightly modified with a different comparator function to accuratley compare distances between two Vertex pointers.
+*/
+
 #include "CodeFromBookToUse/binary_heap.h"
 #include "Utils.hpp"
 
@@ -17,8 +24,8 @@ void Dijkstra(Graph<int>& new_graph, Vertex<int>* starting_vertex) {
 
         for(auto edge : curr_vertex->edges_) {
             
-            int curr_distance = edge.dest_->distance_;
-            int new_distance = curr_vertex->distance_ + edge.weight_;
+            float curr_distance = edge.dest_->distance_;
+            float new_distance = curr_vertex->distance_ + edge.weight_;
 
             if(new_distance < curr_distance) {
                 edge.dest_->distance_ = new_distance;
