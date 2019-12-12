@@ -3,6 +3,8 @@
 template<typename Object>
 void PrintVector(std::vector<Object> some_vector) {
 
+    if(some_vector.empty()) { return; }
+
     std::cout << some_vector[0];
 
     for(int i = 1; i < some_vector.size(); ++i) {
@@ -12,17 +14,21 @@ void PrintVector(std::vector<Object> some_vector) {
     std::cout << ".\n";
 }
 
-void TopologicalSorting(Graph<int>& new_graph) {
+void TopologicalSorting(Graph<int> new_graph) {
 
+    std::size_t num_verticies = new_graph.GetSize();
     Vertex<int>* curr_vertex = new_graph.GetNewVertexWithIndegreeZero();
-
     std::vector<int> sorted_verticies;
-    sorted_verticies.reserve(new_graph.GetSize());
 
     while(curr_vertex != nullptr) {
         new_graph.RemoveVertex(curr_vertex->val_);
         sorted_verticies.push_back(curr_vertex->val_);
         curr_vertex = new_graph.GetNewVertexWithIndegreeZero();
+    }
+
+    if(sorted_verticies.size() != num_verticies) { 
+        std::cout << "Cycle found \n";
+        return;
     }
 
     PrintVector(sorted_verticies);

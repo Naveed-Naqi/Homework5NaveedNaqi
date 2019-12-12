@@ -71,16 +71,24 @@ std::size_t GetSizeFromFile(std::string input_graph) {
 void CreateEdges(Graph<int>& new_graph, std::string curr_line) {
 
     //Source val should actually be the value before the first space, so I should change this.
-    int source_val = StringToInt(curr_line.substr(0,1));
+    int source_val = 0;
+    int edges_start_index = 0;
+    std::size_t size = curr_line.size();
 
-    if(new_graph.FindVertex(source_val) == nullptr) {
+    for(; edges_start_index < size; ++edges_start_index) {
+        if(curr_line[edges_start_index] == ' ') {
+            source_val = StringToInt(curr_line.substr(0, edges_start_index)); 
+            break;
+        }
+    }
+
+    if(new_graph.FindVertex(source_val) == nullptr && edges_start_index != size) {
         new_graph.AddVertex(source_val);
     }
 
-    std::size_t size = curr_line.size();
-    if(size < 3) { return; }
+    if(size <= edges_start_index+1   || edges_start_index == size) { return; }
 
-    int start_pos = 2;
+    int start_pos = edges_start_index+1;
     int num_spaces = 0;
     int vertex_val = 0;
     float weight = 0;
@@ -112,6 +120,7 @@ void CreateEdges(Graph<int>& new_graph, std::string curr_line) {
 
     weight = StringToFloat(curr_line.substr(start_pos, size-start_pos+1));
     new_graph.AddEdge(source_val, vertex_val, weight);
+
 }
 
 Graph<int> CreateGraph(std::string input_graph) {
