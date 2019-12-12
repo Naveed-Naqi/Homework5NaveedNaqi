@@ -97,6 +97,8 @@ public:
     ** @param: new_elem is some Object that needs to be mapped into the adjacency list.
     */
     void AddVertex(const Object& new_elem);
+
+    void RemoveVertex(const Object& new_elem);
     
     /*
     ** Adds a Vertex to the graph.
@@ -123,6 +125,10 @@ public:
     // In this project we use Dijkstras.
     void PrintShortestPaths(Vertex<Object>* starting_vertex) const;
 
+    void PrintIndegrees() const;
+
+    Vertex<Object>* GetNewVertexWithIndegreeZero() const;
+
 private:
 
     std::unordered_map<Object, Vertex<Object>*> adj_list_;
@@ -136,11 +142,24 @@ void Graph<Object>::AddVertex(const Object& new_elem) {
 }
 
 template <typename Object> 
+void Graph<Object>::RemoveVertex(const Object& elem_to_delete) {
+
+    Vertex<Object>* vertex_to_delete = adj_list_[elem_to_delete];
+
+    for(auto edge : vertex_to_delete->edges_) {
+        edge.dest_->indegree_--;
+    }
+
+    adj_list_.erase(elem_to_delete);
+}
+
+template <typename Object> 
 void Graph<Object>::AddEdge(const Object& source, const Object& destination, float weight) {
 
 
     Vertex<Object>* source_vertex = adj_list_[source];
     Vertex<Object>* destination_vertex = adj_list_[destination];
+    destination_vertex->indegree_++;
     Edge<Object> new_edge(destination_vertex, weight);
 
     source_vertex->edges_.push_back(new_edge);
@@ -205,6 +224,23 @@ void Graph<Object>::PrintShortestPaths(Vertex<Object>* starting_vertex) const {
         }
 
         std::cout << " (Cost: " << total_cost << ")\n";
-
     }
+}
+
+template<typename Object>
+void Graph<Object>::PrintIndegrees() const {
+    for(auto itr = adj_list_.begin(); itr != adj_list_.end(); ++itr) {
+        std::cout << itr->second->val_ << " : " << itr->second->indegree_ << "\n";
+    }
+}
+
+template<typename Object>
+Vertex<Object>* Graph<Object>::GetNewVertexWithIndegreeZero() const {
+    for(auto itr = adj_list_.begin(); itr != adj_list_.end(); ++itr) {
+        if(itr->second->indegree_ == 0) {
+            return itr->second;
+        }
+    }
+
+    return nullptr;
 }

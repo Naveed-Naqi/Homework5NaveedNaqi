@@ -32,6 +32,7 @@ void CreateEdges(Graph<int>& new_graph, std::string curr_line);
 ** Creates a graph that matches the given input_graph.
 ** Assumes there is a text file in a folder called InputFiles that has the same name as the input string input_graph.
 ** @param: input_graph is a text file that contains an adjacencny list representation of a graph.
+** ASSUMES there are no random line breaks in the graph or other random spaces. It must be formatted correctly.
 ** @return: returns the completed graph.
 */
 Graph<int> CreateGraph(std::string input_graph);
@@ -69,12 +70,12 @@ std::size_t GetSizeFromFile(std::string input_graph) {
 
 void CreateEdges(Graph<int>& new_graph, std::string curr_line) {
 
+    //Source val should actually be the value before the first space, so I should change this.
     int source_val = StringToInt(curr_line.substr(0,1));
 
     if(new_graph.FindVertex(source_val) == nullptr) {
         new_graph.AddVertex(source_val);
     }
-
 
     std::size_t size = curr_line.size();
     if(size < 3) { return; }

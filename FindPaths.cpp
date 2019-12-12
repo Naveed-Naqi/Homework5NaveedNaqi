@@ -46,7 +46,7 @@ void Dijkstra(Graph<int>& new_graph, Vertex<int>* starting_vertex) {
 int main(int argc, char **argv) {
 
     if (argc != 3) {
-        std::cout << "Usage: " << argv[0] << "<GRAPH_FILE> <STARTING_VERTEX>" << std::endl;
+        std::cout << "Usage: " << argv[0] << " <GRAPH_FILE> <STARTING_VERTEX>" << std::endl;
         return 0;
     }
 

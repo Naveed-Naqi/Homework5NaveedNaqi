@@ -1,13 +1,37 @@
 #include "Utils.hpp"
 
+template<typename Object>
+void PrintVector(std::vector<Object> some_vector) {
+
+    std::cout << some_vector[0];
+
+    for(int i = 1; i < some_vector.size(); ++i) {
+        std::cout << ", " << some_vector[i];
+    }
+
+    std::cout << ".\n";
+}
+
 void TopologicalSorting(Graph<int>& new_graph) {
 
+    Vertex<int>* curr_vertex = new_graph.GetNewVertexWithIndegreeZero();
+
+    std::vector<int> sorted_verticies;
+    sorted_verticies.reserve(new_graph.GetSize());
+
+    while(curr_vertex != nullptr) {
+        new_graph.RemoveVertex(curr_vertex->val_);
+        sorted_verticies.push_back(curr_vertex->val_);
+        curr_vertex = new_graph.GetNewVertexWithIndegreeZero();
+    }
+
+    PrintVector(sorted_verticies);
 }
 
 int main(int argc, char **argv) {
 
     if (argc != 2) {
-        std::cout << "Usage: " << argv[0] << "<GRAPH_FILE> <STARTING_VERTEX>" << std::endl;
+        std::cout << "Usage: " << argv[0] << " <GRAPH_FILE>" << std::endl;
         return 0;
     }
 
