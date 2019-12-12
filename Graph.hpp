@@ -201,7 +201,7 @@ void Graph<Object>::PrintShortestPaths(Vertex<Object>* starting_vertex) const {
             temp_stack.pop();
         }
 
-        std:cout << " (Cost: " << total_cost << ")\n";
+        std::cout << " (Cost: " << total_cost << ")\n";
 
     }
 }

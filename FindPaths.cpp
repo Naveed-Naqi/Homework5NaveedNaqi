@@ -34,9 +34,6 @@ void Dijkstra(Graph<int>& new_graph, Vertex<int>* starting_vertex) {
     }
 
     new_graph.PrintShortestPaths(starting_vertex);
-
-    
-
 }
 
 int main(int argc, char **argv) {
