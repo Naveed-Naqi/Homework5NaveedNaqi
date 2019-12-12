@@ -1,21 +1,41 @@
 #include "CodeFromBookToUse/binary_heap.h"
 #include "Utils.hpp"
 
-void Dijkstra(Graph<int>& new_graph, int starting_vertex_val) {
+void Dijkstra(Graph<int>& new_graph, Vertex<int>* starting_vertex) {
 
     BinaryHeap<Vertex<int>*> heap;
-    Vertex<int>* starting_vertex = new_graph.FindVertex(starting_vertex_val);
-    Vertex<int>* vertex2 = new_graph.FindVertex(2);
-    Vertex<int>* vertex3 = new_graph.FindVertex(3);
-    Vertex<int>* vertex5 = new_graph.FindVertex(5);
-    heap.insert(starting_vertex);
-    heap.insert(vertex2);
-    heap.insert(vertex3);
-    heap.insert(vertex5);
+    new_graph.ResetDistanceAndKnownStatus();
+    starting_vertex->distance_ = 0;
+    starting_vertex->prev_ = starting_vertex;
 
-    Vertex<int>* min = heap.findMin();
-    std::cout << min->val_;
-    //heap.insert(v1);
+    heap.insert(starting_vertex);
+
+    while(!heap.isEmpty()) {
+
+        Vertex<int>* curr_vertex = heap.findMin();
+        heap.deleteMin();
+
+        for(auto edge : curr_vertex->edges_) {
+            
+            int curr_distance = edge.dest_->distance_;
+            int new_distance = curr_vertex->distance_ + edge.weight_;
+
+            if(new_distance < curr_distance) {
+                edge.dest_->distance_ = new_distance;
+                edge.dest_->prev_ = curr_vertex;
+            }
+
+            if(!edge.dest_->known_) {
+                heap.insert(edge.dest_);
+            }
+        }
+
+        curr_vertex->known_ = true;
+    }
+
+    new_graph.PrintShortestPaths(starting_vertex);
+
+    
 
 }
 
@@ -29,10 +49,15 @@ int main(int argc, char **argv) {
     const std::string input_graph = std::string(argv[1]);
     const int starting_vertex_val = StringToInt(std::string(argv[2]));
 
-    //Add code making sure the input_vertex actually exists in the graph.
-
     Graph<int> new_graph = CreateGraph(input_graph);
-    Dijkstra(new_graph, starting_vertex_val);
+    Vertex<int>* starting_vertex = new_graph.FindVertex(starting_vertex_val);
+
+    if(starting_vertex == nullptr) {
+        std::cout << "This vertex is not in the graph. Please try again.";
+        return 0;
+    }
+
+    Dijkstra(new_graph, starting_vertex);
 
     return 0;
 }

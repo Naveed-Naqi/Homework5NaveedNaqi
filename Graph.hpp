@@ -11,6 +11,7 @@
 #include <vector>
 #include <unordered_map>
 #include <climits>
+#include <stack>
 
 template <typename Object>
 struct Vertex;
@@ -32,21 +33,19 @@ struct Edge {
 
 template <typename Object> 
 struct Vertex {
-    Vertex(const Object& val) : val_(val), indegree_(0), distance(INT_MAX) {}
+    Vertex(const Object& val) : val_(val), indegree_(0), distance_(INT_MAX), known_(false), prev_(nullptr) {}
 
-    Vertex() : indegree_(0), distance(INT_MAX) {}
+    Vertex() : indegree_(0), distance_(INT_MAX), known_(false), prev_(nullptr) {}
 
     Object val_;
     std::size_t indegree_;
-    int distance;
+    int distance_;
+    Vertex<Object>* prev_;
+    bool known_;
     std::vector<Edge<Object>> edges_;
 
-    bool operator <(const Vertex<Object>& rhs) {
-        return this->val_ < rhs.val_;
-    }
-
-    bool friend CompareLessThan(Vertex<Object>* lhs, Vertex<Object>* rhs) {
-        return lhs->val_ < rhs->val_;
+    bool friend CompareLessThanDistance(Vertex<Object>* lhs, Vertex<Object>* rhs) {
+        return lhs->distance_ < rhs->distance_;
     }
 
     void PrintEdges() const {
@@ -115,6 +114,10 @@ public:
 
     void PrintAdjList() const;
 
+    void ResetDistanceAndKnownStatus();
+
+    void PrintShortestPaths(Vertex<Object>* starting_vertex) const;
+
 private:
 
     std::unordered_map<Object, Vertex<Object>*> adj_list_;
@@ -164,5 +167,41 @@ void Graph<Object>::PrintAdjList() const {
     for(auto itr = adj_list_.begin(); itr != adj_list_.end(); ++itr) {
         std::cout << itr->first << " : "; 
         itr->second->PrintEdges();
+    }
+}
+
+template<typename Object>
+void Graph<Object>::ResetDistanceAndKnownStatus() {
+
+    for(auto itr = adj_list_.begin(); itr != adj_list_.end(); ++itr) {
+        itr->second->distance_ = INT_MAX;
+        itr->second->known_ = false;
+    }
+}
+
+template<typename Object>
+void Graph<Object>::PrintShortestPaths(Vertex<Object>* starting_vertex) const {
+
+    
+
+    for(auto itr = adj_list_.begin(); itr != adj_list_.end(); ++itr) {
+
+        std::stack<Vertex<int>*>  temp_stack;
+        Vertex<Object>* curr_vertex = itr->second;
+        int total_cost = curr_vertex->distance_;
+        std::cout << curr_vertex->val_ << " : " << starting_vertex->val_;
+        
+        while(curr_vertex != starting_vertex) {
+            temp_stack.push(curr_vertex);
+            curr_vertex = curr_vertex->prev_;
+        }
+
+        while(!temp_stack.empty()) {
+            std::cout << ", " << temp_stack.top()->val_ ;
+            temp_stack.pop();
+        }
+
+        std:cout << " (Cost: " << total_cost << ")\n";
+
     }
 }
